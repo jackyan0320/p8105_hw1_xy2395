@@ -4,7 +4,8 @@ author: "Jack Yan"
 date: "9/13/2018"
 output: github_document
 ---
-## Problem 1
+# Problem 1
+## Creating a data frame with different variable types
 First, try to create a data frame. The code chunk above creates a data frame comprised of:
 
 1.  A random sample of size 10 from a uniform[0, 5] distribution;
@@ -22,21 +23,21 @@ factor_vec = factor(rep(c(0, 1), 5), levels = c(0, 1))
 data_frame = data.frame(random_sample, logical_vec, char_vec, factor_vec)
 ```
 
-
-Now try to take the mean of each variable in the data frame. It apparently works to get the mean of the numeric vector. The mean() function also works on logical vactors, because it converts TRUE and FALSE to 1 and 0, respectively, and then calculate the arithmetic mean.
+## Calculating the mean
+Now try to take the mean of each variable in the data frame. It apparently works to get the mean of the numeric vector. The `mean()` function also works on logical vactors, because it converts `TRUE` and `FALSE` to `1` and `0`, respectively, and then calculate their arithmetic mean.
 ```{r}
 mean(data_frame$random_sample)
 mean(data_frame$logical_vec)
 ```
 
-In the attempts to get the means of the character vector, and the factor vector, a warning shows up and "NA" is returned. This is because mean() function doesn't support these two types of data. 
+In the attempts to get the means of the character vector, and the factor vector, a warning shows up and "NA" is returned. This is because `mean()` function doesn't support these two types of data. 
 ```{r}
 mean(data_frame$char_vec)
 mean(data_frame$factor_vec)
 ```
 
-
-Now coerce objects into type "numeric". Logical values FALSE and TRUE are turned into 0 and 1, respectively. Characters are all turned to "NA". Factor objects are coerced to numbers indicating their different levels. Results are not shown here.
+## Coercion
+Now coerce objects into type "numeric". Logical values `FALSE` and `TRUE` are turned into `0` and `1`, respectively. Characters are all turned to `NA`. Factor objects are coerced to numbers indicating their different levels. Results are not shown.
 ```{r, eval = FALSE}
 as.numeric(logical_vec)
 as.numeric(char_vec)
@@ -49,12 +50,15 @@ as.numeric(as.factor(char_vec))
 as.character(factor_vec)
 as.numeric(as.character(factor_vec))
 ```
-However, in another case, if the factor vector is labeled with characters, it will first be converted to the label name, and therefore cannot be converted to numerics, so NAs will be returned. 
+However, in another case, if the factor vector is labeled with characters, it will first be converted to the label name, and therefore cannot be converted to numerics, so `NA` will be returned. See below: 
 ```{r}
 factor_vec_labeled = factor(rep(c(0, 1), 5), levels = c(0, 1), labels = c("male","female"))
 as.character(factor_vec_labeled)
 as.numeric(as.character(factor_vec_labeled))
 ```
+
+
+# Problem 2
 
 
 
