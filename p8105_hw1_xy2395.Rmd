@@ -4,27 +4,57 @@ author: "Jack Yan"
 date: "9/13/2018"
 output: github_document
 ---
+## Problem 1
+First, try to create a data frame. The code chunk above creates a data frame comprised of:
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+1.  A random sample of size 10 from a uniform[0, 5] distribution;
+2.  A logical vector indicating whether elements of the sample are greater than 2;
+3.  A (length-10) character vector;
+4.  A (length-10) factor vector.
+```{r}
+set.seed(1)
+random_sample = runif(10, 0, 5)  
+logical_vec = random_sample > 2
+char_vec = rep(c("a", "b", "c", "d", "e"), 2)
+factor_vec = factor(rep(c(0, 1), 5), levels = c(0, 1))
+
+#create a data frame from the 4 vectors above
+data_frame = data.frame(random_sample, logical_vec, char_vec, factor_vec)
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+Now try to take the mean of each variable in the data frame. It apparently works to get the mean of the numeric vector. The mean() function also works on logical vactors, because it converts TRUE and FALSE to 1 and 0, respectively, and then calculate the arithmetic mean.
+```{r}
+mean(data_frame$random_sample)
+mean(data_frame$logical_vec)
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+In the attempts to get the means of the character vector, and the factor vector, a warning shows up and "NA" is returned. This is because mean() function doesn't support these two types of data. 
+```{r}
+mean(data_frame$char_vec)
+mean(data_frame$factor_vec)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+Now coerce objects into type "numeric". Logical values FALSE and TRUE are turned into 0 and 1, respectively. Characters are all turned to "NA". Factor objects are coerced to numbers indicating their different levels. Results are not shown here.
+```{r, eval = FALSE}
+as.numeric(logical_vec)
+as.numeric(char_vec)
+as.numeric(factor_vec)
+```
+
+Next, try to convert the character variable from character to factor to numeric; similarly, convert the factor variable from factor to character to numeric. As a result, the character variable can be converted to factor to numeric, and different characters are designated different numbers. Similarly, the factor variable can also be converted to character to numeric. 
+```{r}
+as.numeric(as.factor(char_vec))
+as.character(factor_vec)
+as.numeric(as.character(factor_vec))
+```
+However, in another case, if the factor vector is labeled with characters, it will first be converted to the label name, and therefore cannot be converted to numerics, so NAs will be returned. 
+```{r}
+factor_vec_labeled = factor(rep(c(0, 1), 5), levels = c(0, 1), labels = c("male","female"))
+as.character(factor_vec_labeled)
+as.numeric(as.character(factor_vec_labeled))
+```
+
+
+
