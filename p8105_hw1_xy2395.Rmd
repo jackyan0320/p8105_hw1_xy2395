@@ -21,10 +21,13 @@ factor_vec = factor(rep(c(0, 1), 5), levels = c(0, 1))
 
 #create a data frame from the 4 vectors above
 data_frame = data.frame(random_sample, logical_vec, char_vec, factor_vec)
+
+#show the data frame
+data_frame
 ```
 
 ## Calculating the mean
-Now try to take the mean of each variable in the data frame. It apparently works to get the mean of the numeric vector. The `mean()` function also works on logical vactors, because it converts `TRUE` and `FALSE` to `1` and `0`, respectively, and then calculate their arithmetic mean.
+Now try to take the mean of each variable in the data frame. It apparently works to get the mean of the numeric vector. The `mean()` function also works on logical vactors, as it converts `TRUE` and `FALSE` to `1` and `0`, respectively, and then calculate their arithmetic mean.
 ```{r}
 mean(data_frame$random_sample)
 mean(data_frame$logical_vec)
@@ -59,6 +62,53 @@ as.numeric(as.character(factor_vec_labeled))
 
 
 # Problem 2
+## Creating a data frame
+```{r, include = FALSE}
+rm(list=ls())
+```
+Create a data frame comprised of:
 
+1.  x: a random sample of size 1000 from a standard Normal distribution;
+2.  y: a random sample of size 1000 from a standard Normal distribution;
+3.  A logical vector indicating whether the x + y > 0;
+4.  A numeric vector created by coercing the above logical vector;
+5.  A factor vector created by coercing the above logical vector.
+
+
+```{r}
+set.seed(1)
+x = rnorm(1000) 
+y = rnorm(1000)
+positive_sum = x + y > 0
+numeric_vec = as.numeric(positive_sum)
+factor_vec = as.factor(positive_sum)
+
+#combine the 5 vectors above into data frame
+data_frame = data.frame(x, y, positive_sum, numeric_vec, factor_vec)
+head(data_frame)
+```
+
+
+The size of the dataset is `r nrow(data_frame)` rows * `r ncol(data_frame)` columns. The mean of x is `r mean(x)`, and the median of x is `r median(x)`. The proportion of cases for which the logical vector is `TRUE` is `r  sum(positive_sum)/length(positive_sum)`.
+
+## Graphing
+### Part 1
+```{r, include = FALSE}
+library(tidyverse)
+```
+Make a scatterplot of `y` vs `x`, and color points using the logical variable `positive_sum`. Export this scatterplot to my project directory using `ggsave`. The plot will be saved to a .pdf file called `scatter_plot.pdf`.
+```{r}
+ggplot(data_frame, aes(x = x, y = y, color = positive_sum)) + geom_point()
+ggsave("scatter_plot.pdf", height = 4, width = 6)
+```
+
+### Part 2
+Now make a second and third scatterplot that color points using the numeric and factor variables, respectively.
+```{r}
+ggplot(data_frame, aes(x = x, y = y, color = numeric_vec)) + geom_point()
+ggplot(data_frame, aes(x = x, y = y, color = factor_vec)) + geom_point()
+```
+
+Based on the two graphs above, if the points are colored using numeric variables, the color scale is shown as a continuous gradient ranging from the minimum to the maximum. If the points are colored by factor variables, the color scale is shown as separate color dots showing different levels of the factor variables. 
 
 
