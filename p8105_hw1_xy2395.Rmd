@@ -4,6 +4,11 @@ author: "Jack Yan"
 date: "9/13/2018"
 output: github_document
 ---
+
+```{r, include = FALSE}
+library(tidyverse)
+```
+
 # Problem 1
 ## Creating a data frame with different variable types
 First, try to create a data frame. The code chunk below creates a data frame comprised of:
@@ -14,44 +19,43 @@ First, try to create a data frame. The code chunk below creates a data frame com
 4.  A (length-10) factor vector.
 ```{r}
 set.seed(1)
-random_sample = runif(10, 0, 5)  
-logical_vec = random_sample > 2
-char_vec = rep(c("a", "b", "c", "d", "e"), 2)
-factor_vec = factor(rep(c(0, 1), 5), levels = c(0, 1))
-
-#create a data frame from the 4 vectors above
-data_frame = data.frame(random_sample, logical_vec, char_vec, factor_vec)
+data_frame = tibble(
+  vec_numeric = runif(10, 0, 5),
+  vec_logical = vec_numeric > 2,
+  vec_char = c("a", "b", "c", "d", "e", "aa", "bb", "ccc", "dd", "ee"),
+  vec_factor = factor(c("M", "F", "F", "M", "M", "M", "F", "F", "F", "M"))
+)
 
 #check the data frame
 data_frame
 ```
 
-## Calculating the mean
+## Calculating the means
 Now try to take the mean of each variable in the data frame. It apparently works to get the mean of the numeric vector. The `mean()` function also works on logical vectors, as it converts `TRUE` and `FALSE` to `1` and `0`, respectively, and then calculate their arithmetic mean. Code and results are shown below.
 ```{r}
-mean(data_frame$random_sample)
-mean(data_frame$logical_vec)
+mean(data_frame$vec_numeric)
+mean(data_frame$vec_logical)
 ```
 
 In the attempts to get the means of the character vector ,and also the factor vector, a warning shows up and "NA" is returned. This is because `mean()` function doesn't support these two types of variable. 
 ```{r}
-mean(data_frame$char_vec)
-mean(data_frame$factor_vec)
+mean(data_frame$vec_char)
+mean(data_frame$vec_factor)
 ```
 
 ## Coercion
-Now coerce objects into type "numeric". Logical values `FALSE` and `TRUE` are turned into `0` and `1`, respectively. Characters are all turned to `NA`. Factor objects are coerced to numbers indicating their different levels. Results are not shown.
+Now coerce objects into type "numeric". Logical values `FALSE` and `TRUE` are turned into `0` and `1`, respectively. Character variables are all turned to `NA`. Factor objects are coerced to numbers indicating their different levels. Results are not shown.
 ```{r, eval = FALSE}
-as.numeric(logical_vec)
-as.numeric(char_vec)
-as.numeric(factor_vec)
+as.numeric(data_frame$vec_logical)
+as.numeric(data_frame$vec_char)
+as.numeric(data_frame$vec_factor)
 ```
 
-Next, try to convert the character variable from character to factor to numeric; similarly, convert the factor variable from factor to character to numeric. As a result, the character variable can be converted to factor to numeric, and different characters are designated different numbers. Similarly, the factor variable can also be converted to character to numeric. 
+Next, try to convert the character variable from character to factor to numeric; similarly, convert the factor variable from factor to character to numeric. As a result, the character variable can be converted to factor to numeric, and different characters are designated different numbers.  The factor variable can also be converted to character, but cannot then be changed to numeric. `NA`s are introduced by this type of coercion. 
 ```{r}
-as.numeric(as.factor(char_vec))
-as.character(factor_vec)
-as.numeric(as.character(factor_vec))
+as.numeric(as.factor(data_frame$vec_char))
+as.character(data_frame$vec_factor)
+as.numeric(as.character(data_frame$vec_factor))
 ```
 However, in another case, if the factor vector is labeled with characters, it will first be converted to the label name, and therefore cannot be converted to numerics, so `NA` will be returned. See below: 
 ```{r}
@@ -84,7 +88,7 @@ numeric_vec = as.numeric(positive_sum)
 factor_vec = as.factor(positive_sum)
 
 #combine the 5 vectors above into data frame
-data_frame = data.frame(x, y, positive_sum, numeric_vec, factor_vec)
+data_frame = tibble(x, y, positive_sum, numeric_vec, factor_vec)
 head(data_frame)
 ```
 
@@ -93,9 +97,7 @@ The size of the dataset is `r nrow(data_frame)` rows * `r ncol(data_frame)` colu
 
 ## Graphing
 ### Part 1
-```{r, include = FALSE}
-library(tidyverse)
-```
+
 Make a scatterplot of `y` vs `x`, and color points using the logical variable `positive_sum`. Export this scatterplot to my project directory using `ggsave`. The plot will be saved to a .pdf file called `scatter_plot.pdf`.
 ```{r}
 ggplot(data_frame, aes(x = x, y = y, color = positive_sum)) + geom_point()
