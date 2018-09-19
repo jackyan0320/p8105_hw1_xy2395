@@ -37,7 +37,7 @@ mean(data_frame$vec_numeric)
 mean(data_frame$vec_logical)
 ```
 
-In the attempts to get the means of the character vector ,and also the factor vector, a warning shows up and "NA" is returned. This is because `mean()` function doesn't support these two types of variable. 
+In the attempts to get the means of the character vector, and also the factor vector, a warning shows up and `NA` is returned. This is because `mean()` function doesn't support these two types of variable. 
 ```{r}
 mean(data_frame$vec_char)
 mean(data_frame$vec_factor)
@@ -54,15 +54,14 @@ as.numeric(data_frame$vec_factor)
 Next, try to convert the character variable from character to factor to numeric; similarly, convert the factor variable from factor to character to numeric. As a result, the character variable can be converted to factor to numeric, and different characters are designated different numbers.  The factor variable can also be converted to character, but cannot then be changed to numeric. `NA`s are introduced by this type of coercion. 
 ```{r}
 as.numeric(as.factor(data_frame$vec_char))
+```
+
+The factor variable can also be converted to character, but cannot then be changed to numeric. `NA`s are introduced by this type of coercion.
+```{r}
 as.character(data_frame$vec_factor)
 as.numeric(as.character(data_frame$vec_factor))
 ```
-However, in another case, if the factor vector is labeled with characters, it will first be converted to the label name, and therefore cannot be converted to numerics, so `NA` will be returned. See below: 
-```{r}
-factor_vec_labeled = factor(rep(c(0, 1), 5), levels = c(0, 1), labels = c("male","female"))
-as.character(factor_vec_labeled)
-as.numeric(as.character(factor_vec_labeled))
-```
+
 
 
 # Problem 2
